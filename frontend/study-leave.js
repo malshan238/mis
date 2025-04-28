@@ -29,11 +29,11 @@ function allEntries() {
                     }
                     return response.json();
                 })
-                .then(StudyLeaveDTO => {
-                    console.log("Fetched study leave record:", StudyLeaveDTO);
+                .then(StudyLeave => {
+                    console.log("Fetched study leave record:", StudyLeave);
                     // Clear previous rows
                     tbody.innerHTML = '';
-                    tbody.appendChild(createTableRow(StudyLeaveDTO));
+                    tbody.appendChild(createTableRow(StudyLeave));
                     document.getElementById('staffIdInput').value = ''; // Clear input field
                 })
                 .catch(error => {
@@ -59,7 +59,7 @@ function loadAllRecords(tbody) {
             }
             console.log(data);
             // Create and append rows asynchronously
-            const promises = data.map(StudyLeaveDTO => createTableRow(StudyLeaveDTO));
+            const promises = data.map(StudyLeave => createTableRow(StudyLeave));
             Promise.all(promises)
                 .then(rows => {
                     rows.forEach(row => {
@@ -122,55 +122,23 @@ function fetchFilteredData() {
 }
 
 
-
-
-
-// function createTableRow(StudyLeaveDTO, status_1 = "pending", status_2 = "pending", status_3 = "pending") {
-//     console.log("Creating table row for:", StudyLeaveDTO);
-
-//     const row = document.createElement("tr");
-//     row.innerHTML = `
-//         <td>${StudyLeaveDTO.leaveId}</td>
-//         <td>${StudyLeaveDTO.startDate}</td>
-//         <td>${StudyLeaveDTO.endDate}</td>
-//         <td>${StudyLeaveDTO.staffId}</td>
-//         <td>${StudyLeaveDTO.name}</td>
-//         <td>${StudyLeaveDTO.faculty}</td>
-//         <td>${StudyLeaveDTO.department}</td>
-//         <td><button type="button" class="more-info-btn" data-id="${StudyLeaveDTO.staffId}">More Info</button></td>
-//         <td>${status_1}</td>
-//         <td>${status_2}</td>
-//         <td>${status_3}</td>
-//     `;
-
-//     const moreInfoBtn = row.querySelector(".more-info-btn");
-//     moreInfoBtn.addEventListener("click", function () {
-//         const staffId = this.getAttribute("data-id");
-//         console.log("Redirecting to student info page for student with ID:", staffId);
-
-//         // Fixed the file path separator and ensured a valid URL
-//         window.location.href = `../templates/study-leave-info.html?staffId=${staffId}`;
-
-//     });
-
-//     return row;
-// }
-function createTableRow(StudyLeaveDTO, status_1 = "pending", status_2 = "pending", status_3 = "pending") {
-    console.log("Creating table row for:", StudyLeaveDTO);
+function createTableRow(StudyLeave, status_1 = "pending", status_2 = "pending", status_3 = "pending") {
+    console.log("Creating table row for:", StudyLeave);
 
     const row = document.createElement("tr");
     row.innerHTML = `
-        <td>${StudyLeaveDTO.leaveId}</td>
-        <td>${StudyLeaveDTO.startDate}</td>
-        <td>${StudyLeaveDTO.endDate}</td>
-        <td>${StudyLeaveDTO.staffId}</td>
-        <td>${StudyLeaveDTO.name}</td>
-        <td>${StudyLeaveDTO.faculty}</td>
-        <td>${StudyLeaveDTO.department}</td>
-        <td><button type="button" class="more-info-btn" data-id="${StudyLeaveDTO.staffId}">More Info</button></td>
-        <td>${status_1}</td>
-        <td>${status_2}</td>
-        <td>${status_3}</td>
+        <td>${StudyLeave.leaveId}</td>
+        <td>${StudyLeave.startDate}</td>
+        <td>${StudyLeave.endDate}</td>
+        <td>${StudyLeave.staffMember?.staffId || "N/A"}</td>
+        <td>${StudyLeave.staffMember?.name || "N/A"}</td>
+        <td>${StudyLeave.staffMember?.faculty?.facultyName || "N/A"}</td>
+        <td>${StudyLeave.staffMember?.department?.departmentName || "N/A"}</td>
+        <td><button type="button" class="more-info-btn" data-id="${StudyLeave.staffMember?.staffId}">More Info</button></td>
+        <td>${StudyLeave.step1 || status_1}</td>
+        <td>${StudyLeave.step2 || status_2}</td>
+        <td>${StudyLeave.step3 || status_3}</td>
+        <td>${StudyLeave.step4 || "pending"}</td>
     `;
 
     const moreInfoBtn = row.querySelector(".more-info-btn");
@@ -183,6 +151,7 @@ function createTableRow(StudyLeaveDTO, status_1 = "pending", status_2 = "pending
     return row;
 }
 
+
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("Full URL:", window.location.href);
@@ -190,65 +159,153 @@ window.onload = function () {
     console.log("Extracted staffId:", staffId);
 
     if (staffId) {
+        // These functions are assumed to be defined elsewhere
         fetchEmployeeDetails(staffId);
         fetchAdditionalInfo(staffId);
-        fetchApprovedSteps(staffId);
-    }
 
-    const buttons = document.querySelectorAll(".approve-step-button");
-    buttons.forEach(button => {
-        button.addEventListener("click", () => {
-            const stepName = button.getAttribute("data-step-name");
-            approveStep(staffId, stepName, button);
+        // Fetch the initial state of steps and update button appearances
+        fetchApprovedSteps(staffId);
+
+        // Add event listeners to approve buttons
+        const buttons = document.querySelectorAll(".approve-step-button");
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                const stepName = button.getAttribute("data-step-name");
+                // Call the corrected approveStep function
+                approveStep(staffId, stepName, button);
+                // Removed redundant fetchApprovedSteps(staffId) call here
+            });
         });
-    });
+    } else {
+        console.error("Staff ID not found in URL parameters.");
+        // Optionally display an error message to the user on the page
+    }
 };
 
-function approveStep(staffId, stepName, button) {
-    const payload = { step1: null, step2: null, step3: null, step4: null };
+/**
+ * Approves a specific step for a given staff member.
+ * Fetches the current state, updates the specific step, and PUTs the full state back.
+ * @param {string} staffId - The ID of the staff member.
+ * @param {string} stepName - The name of the step to approve (e.g., "Step 1").
+ * @param {HTMLButtonElement} button - The button element that was clicked.
+ */
+async function approveStep(staffId, stepName, button) {
+    // Indicate processing (optional)
+    button.disabled = true;
+    button.textContent = 'Processing...';
 
-    if (stepName === "Step 1") payload.step1 = "Approved";
-    else if (stepName === "Step 2") payload.step2 = "Approved";
-    else if (stepName === "Step 3") payload.step3 = "Approved";
-    else if (stepName === "Step 4") payload.step4 = "Approved";
+    try {
+        // 1. Fetch the current state of ALL steps first
+        const getStepsResponse = await fetch(`http://localhost:8080/api/study_leave/${encodeURIComponent(staffId)}`);
 
-    fetch(`http://localhost:8080/api/study_leave/${encodeURIComponent(staffId)}/steps`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
-    .then(res => {
-        if (res.ok) {
-            button.disabled = true;
-            button.textContent = `${stepName} Approved`;
-        } else {
-            console.error("Failed to approve step. Status:", res.status);
+        if (!getStepsResponse.ok) {
+            // Handle HTTP errors during fetch
+            throw new Error(`Failed to fetch current steps. Status: ${getStepsResponse.status}`);
         }
-    })
-    .catch(err => console.error("Error updating step:", err));
+
+        const currentStepsData = await getStepsResponse.json();
+        console.log("Fetched current steps before update:", currentStepsData);
+
+        // 2. Create the payload based on the current state
+        //    Ensure payload includes all expected fields for the PUT request
+        //    Assuming the GET response structure matches the expected PUT body structure
+        const payload = { ...currentStepsData };
+
+        // 3. Modify the specific step being approved
+        if (stepName === "Step 1") payload.step1 = "Approved";
+        else if (stepName === "Step 2") payload.step2 = "Approved";
+        else if (stepName === "Step 3") payload.step3 = "Approved";
+        else if (stepName === "Step 4") payload.step4 = "Approved";
+        // Add more steps here if needed
+
+        console.log("Payload to send for PUT:", payload);
+
+        // 4. Send the PUT request with the updated payload
+        const updateResponse = await fetch(`http://localhost:8080/api/study_leave/${encodeURIComponent(staffId)}/steps`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload) // Send the modified full object
+        });
+
+        // 5. Handle the PUT response
+        if (updateResponse.ok) {
+            console.log(`${stepName} approved successfully.`);
+            // Update UI permanently on success
+            button.textContent = `${stepName} Approved`;
+            // Button remains disabled
+        } else {
+            // Handle HTTP errors during update
+            console.error(`Failed to approve ${stepName}. Status: ${updateResponse.status}`);
+            // Re-enable button on failure so user can retry (optional)
+            button.disabled = false;
+            button.textContent = `Approve ${stepName}`; // Reset text
+            // Optionally show an error message to the user
+            alert(`Failed to approve ${stepName}. Server responded with status ${updateResponse.status}.`);
+        }
+
+    } catch (err) {
+        // Handle network errors or errors during JSON parsing or other issues
+        console.error(`Error during ${stepName} approval process:`, err);
+        // Re-enable button on failure
+        button.disabled = false;
+        button.textContent = `Approve ${stepName}`; // Reset text
+         // Optionally show an error message to the user
+         alert(`An error occurred while approving ${stepName}. Please check the console or try again later.`);
+    }
 }
 
+/**
+ * Fetches the current approval status for all steps and updates the UI.
+ * @param {string} staffId - The ID of the staff member.
+ */
 function fetchApprovedSteps(staffId) {
     fetch(`http://localhost:8080/api/study_leave/${encodeURIComponent(staffId)}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                 // Handle HTTP errors (e.g., 404 Not Found if staffId is invalid)
+                console.error(`Failed to fetch steps initial state. Status: ${res.status}`);
+                 // Throw an error to be caught by .catch()
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json(); // Parse JSON only if response is OK
+        })
         .then(data => {
+            console.log("Fetched initial steps data:", data);
+            // Disable buttons based on fetched status
             if (data.step1 === "Approved") disableButton("Step 1");
             if (data.step2 === "Approved") disableButton("Step 2");
             if (data.step3 === "Approved") disableButton("Step 3");
             if (data.step4 === "Approved") disableButton("Step 4");
+            // Add more steps here if needed
         })
-        .catch(err => console.error("Failed to fetch steps:", err));
+        .catch(err => {
+            // Catches errors from fetch() itself (network issues) or from the .then() chain
+            console.error("Failed to fetch or process initial steps:", err);
+            // Optionally display an error to the user that initial state couldn't be loaded
+        });
 }
 
+/**
+ * Disables a button and updates its text to show it's approved.
+ * @param {string} stepName - The step name corresponding to the button's data-step-name attribute.
+ */
 function disableButton(stepName) {
     const btn = document.querySelector(`.approve-step-button[data-step-name="${stepName}"]`);
     if (btn) {
         btn.disabled = true;
         btn.textContent = `${stepName} Approved`;
+    } else {
+        // Log a warning if a button isn't found - might indicate a mismatch
+        // between fetched data and HTML structure.
+        console.warn(`Button for step "${stepName}" not found during initial UI update.`);
     }
 }
 
-
+// Dummy functions if they weren't provided, to avoid errors if called
+// function fetchEmployeeDetails(staffId) { console.log(`Workspaceing employee details for ${staffId}`)}
+// function fetchAdditionalInfo(staffId) { console.log(`Workspaceing additional info for ${staffId}`)}
 // Function to populate the fields with employee data
 function populateEmployeeDetails(employee) {
     document.getElementById('general-name').textContent = employee.name ;
@@ -297,90 +354,6 @@ function fetchEmployeeDetails(employeeId) {
         
 }
 
-
-
-
-// window.onload = function () {
-//     const urlParams = new URLSearchParams(window.location.search);
-//     console.log("Full URL:", window.location.href);
-//     const employeeId = urlParams.get('employeeId'); // Get the employeeId from the query string
-//     console.log(employeeId);
-//     document.getElementById("approvalTab").addEventListener("click",function (employeeId){
-
-
-//     })
-    
-//     if (employeeId) {
-//         console.log("ok");
-//         
-
-//     } else {
-//         document.getElementById('general-name').textContent = "Employee ID not provided.";
-//     }
-// };
-
-// window.onload = function () {
-//     const urlParams = new URLSearchParams(window.location.search);
-//     console.log("Full URL:", window.location.href);
-//     const staffId= urlParams.get('staffId'); // Get the employeeId from the query string
-//     console.log(staffId);
-
-//         if (staffId) {
-//             fetchEmployeeDetails(staffId);
-//             fetchAdditionalInfo(staffId);
-//             fetchApprovedSteps(staffId); // disable buttons based on DB
-//         }
-
-//         const buttons = document.querySelectorAll(".approve-step-button");
-//         buttons.forEach(button => {
-//             button.addEventListener("click", () => {
-//                 const stepName = button.getAttribute("data-step-name");
-//                 approveStep(staffId, stepName, button);
-//             });
-//         });
-//     };
-
-//     function approveStep(staffId, stepName, button) {
-//         const payload = { step1: null, step2: null, step3: null, step4: null };
-
-//         if (stepName === "Step 1") payload.step1 = "Approved";
-//         if (stepName === "Step 2") payload.step2 = "Approved";
-//         if (stepName === "Step 3") payload.step3 = "Approved";
-//         if (stepName === "Step 4") payload.step4 = "Approved";
-
-//         fetch(`http://localhost:8080/api/study_leave/${staffId}/steps`, {
-//             method: 'PUT',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(payload)
-//         })
-//         .then(res => {
-//             if (res.ok) {
-//                 button.disabled = true;
-//                 button.textContent = `${stepName} Approved`;
-//             }
-//         })
-//         .catch(err => console.error("Error updating step:", err));
-//     }
-
-//     function fetchApprovedSteps(staffId) {
-//         fetch(`http://localhost:8080/api/study_leave/${staffId}`)
-//             .then(res => res.json())
-//             .then(data => {
-//                 if (data.step1 === "Approved") disableButton("Step 1");
-//                 if (data.step2 === "Approved") disableButton("Step 2");
-//                 if (data.step3 === "Approved") disableButton("Step 3");
-//                 if (data.step4 === "Approved") disableButton("Step 4");
-//             })
-//             .catch(err => console.error("Failed to fetch steps:", err));
-//     }
-
-//     function disableButton(stepName) {
-//         const btn = document.querySelector(`.approve-step-button[data-step-name="${stepName}"]`);
-//         if (btn) {
-//             btn.disabled = true;
-//             btn.textContent = `${stepName} Approved`;
-//         }
-//     };
 
 
 
@@ -450,14 +423,6 @@ function toggleHiddenPanel() {
         toggleButton.textContent = 'Show More Details';
     }
 }
-
-
-
-
-
-
-
-
 
 document.getElementById("sendEmailButton").addEventListener("click", function () {
     const id = document.getElementById('user-id').textContent;
