@@ -1,0 +1,156 @@
+/* Study Leave Extension Page Stylesheet */
+/* Last updated: 2025-04-23 */
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #ecf0f1;
+    --accent-color: #3498db;
+    --accent-hover: #2980b9;
+    --text-dark: #2c3e50;
+    --text-light: #ffffff;
+    --border-color: #dcdcdc;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+    color: var(--text-dark);
+}
+
+.page-header {
+    background-color: var(--text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.page-header .logo,
+.page-header .trailing {
+    height: 70px;
+    object-fit: contain;
+}
+
+.header-text {
+    text-align: center;
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.header-text h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #555;
+}
+
+.body-new {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--text-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.body-new h1 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-section label,
+.search-bar input,
+.search-bar button,
+.new-entry {
+    font-size: 1rem;
+}
+
+.filter-section select,
+.search-bar input {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    min-width: 200px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-bar button,
+.new-entry {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.search-bar button:hover,
+.new-entry:hover {
+    background-color: var(--accent-hover);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+table thead {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+table tr:nth-child(even) {
+    background-color: var(--secondary-color);
+}
+
+.more-info-btn {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.more-info-btn:hover {
+    background-color: var(--accent-hover);
+}

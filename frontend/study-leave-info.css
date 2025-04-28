@@ -1,0 +1,248 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    background-color: #113366;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.back-btn {
+    background-color: #fbbc05;
+    color: #113366;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #e6a800;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.tab-btn.active {
+    color: #113366;
+    border-bottom: 3px solid #4285f4;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    color: #113366;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+h3 {
+    color: #3367d6;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.info-card {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+
+.info-label {
+    width: 200px;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-value {
+    color: #555;
+}
+
+.toggle-btn {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+}
+
+.toggle-btn:hover {
+    background-color: #3367d6;
+}
+
+.workflow-container {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.steps-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.steps-list li {
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #4285f4;
+    padding-left: 1rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.step-header {
+    font-weight: 600;
+    color: #113366;
+    margin-bottom: 0.5rem;
+}
+
+.step-content p {
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.approve-step-button {
+    background-color: #34a853;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.approve-step-button:hover {
+    background-color: #2a8644;
+}
+
+.email-notification {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.email-btn {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.email-btn:hover {
+    background-color: #3367d6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .info-row {
+        flex-direction: column;
+    }
+    .info-label {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .tabs {
+        flex-direction: column;
+    }
+    .tab-btn {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+

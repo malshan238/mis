@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Leave Information</title>
+    <link rel="stylesheet" href="../frontend/study-leave-info.css">
+</head>
+<body>
+    <header>
+        <h1>Study Leave Information</h1>
+        <a href="../frontend/study-leave.html" class="back-btn">Back to List</a>
+    </header>
+
+    <div class="container">
+        <div id="confirm-modal" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;">
+  <div style="
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;">
+    <p id="confirm-message">Are you sure you want to send this email?</p>
+    <button id="confirm-yes" style="margin: 10px;">Yes</button>
+    <button id="confirm-no" style="margin: 10px;">Cancel</button>
+  </div>
+</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('general-info')">General Info</button>
+            <button class="tab-btn" id="approvalTab" 
+             {% comment %} onclick="openTab('approval-process')"  {% endcomment %}
+            >
+            Approval Process</button>
+        </div>
+
+        <div id="general-info" class="tab-content" style="display: block;" >
+            <h2>Employee Information</h2>
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span id="general-name" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Staff ID:</span>
+                    <span id="user-id" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Designation:</span>
+                    <span id="user-designation" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Department:</span>
+                    <span id="user-department" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Faculty:</span>
+                    <span id="user-faculty" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Appointment Date:</span>
+                    <span id="user-date-of-appointment" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Years of Service:</span>
+                    <span id="user-years-of-service" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Age:</span>
+                    <span id="user-age" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span id="email-id" class="info-value"></span>
+                </div>
+            </div>
+            
+            <button class="toggle-btn" onclick="toggleHiddenPanel()">Show More Details</button>
+            
+            <div id="extra-info-panel" style="display: none;">
+                <h3>Additional Information</h3>
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-label">Title of Training:</span>
+                        <span id="titleOfTraining" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Donor Agency:</span>
+                        <span id="donorAgency" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Source of Funds:</span>
+                        <span id="sourceOfFunds" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Name of Project:</span>
+                        <span id="nameOfProject" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Country and City:</span>
+                        <span id="countryAndCity" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Field of Study:</span>
+                        <span id="field" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Procedure Details:</span>
+                        <span id="procedure" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Start Date:</span>
+                        <span id="startDate" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">End Date:</span>
+                        <span id="endDate" class="info-value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="approval-process" class="tab-content" style="display: none;">
+            <h2>Approval Process</h2>
+            <div class="workflow-container">
+                <ul id="stepsList" class="steps-list">
+                    <li>
+                        <div class="step-header">Step 1: Approval for first 6 months</div>
+                        <div class="step-content">
+                            <button class="approve-step-button" data-step-name="Step 1">Approve Step 1</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">Step 2: Approval for first year</div>
+                        <div class="step-content">
+                            <button class="approve-step-button" data-step-name="Step 2">Approve Step 2</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">Step 3: Approval for first year and 6 months</div>
+                        <div class="step-content">
+                            <button class="approve-step-button" data-step-name="Step 3">Approve Step 3</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">Step 4: Approval for 2 years</div>
+                        <div class="step-content">
+                            <button class="approve-step-button" data-step-name="Step 4">Approve Step 4</button>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="email-notification">
+                    <button id="sendEmailButton" class="email-btn">Send Email Notification</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading-overlay" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;">
+    <div class="spinner"></div>
+</div>
+
+    <script src="../frontend/study-leave.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Leave Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Study Leave Management System</h1>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="staffIdInput" placeholder="Enter Staff ID">
+            <button id="searchButton">Search</button>
+            
+            <div class="filter-container">
+                <select id="statusFilter" onchange="fetchFilteredData()">
+                    <option value="select">Select Filter</option>
+                    <option value="current-month-year">Current Month & Year</option>
+                    <option value="current-month-year-past">Current Month & Year (Past)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Leave ID</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Faculty</th>
+                        <th>Department</th>
+                        <th>Action</th>
+                        <th>Step 1</th>
+                        <th>Step 2</th>
+                        <th>Step 3</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Table rows will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Additional HTML for study-leave-info.html page -->
+    <div class="info-page" style="display: none;">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('general-info')">General Info</button>
+            <button class="tab-btn" onclick="openTab('application-details')">Application Details</button>
+            <button class="tab-btn" onclick="openTab('approval-process')">Approval Process</button>
+        </div>
+
+        <div id="general-info" class="tab-content">
+            <h2>Employee Information</h2>
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span id="general-name" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Staff ID:</span>
+                    <span id="user-id" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Designation:</span>
+                    <span id="user-designation" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Department:</span>
+                    <span id="user-department" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Faculty:</span>
+                    <span id="user-faculty" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Appointment Date:</span>
+                    <span id="user-date-of-appointment" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Years of Service:</span>
+                    <span id="user-years-of-service" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Age:</span>
+                    <span id="user-age" class="info-value"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span id="email-id" class="info-value"></span>
+                </div>
+            </div>
+            
+            <button class="toggle-btn" onclick="toggleHiddenPanel()">Show More Details</button>
+            
+            <div id="extra-info-panel" style="display: none;">
+                <h3>Additional Information</h3>
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-label">Title of Training:</span>
+                        <span id="titleOfTraining" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Donor Agency:</span>
+                        <span id="donorAgency" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Source of Funds:</span>
+                        <span id="sourceOfFunds" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Name of Project:</span>
+                        <span id="nameOfProject" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Country and City:</span>
+                        <span id="countryAndCity" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Field of Study:</span>
+                        <span id="field" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Procedure Details:</span>
+                        <span id="procedure" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Start Date:</span>
+                        <span id="startDate" class="info-value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">End Date:</span>
+                        <span id="endDate" class="info-value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="application-details" class="tab-content" style="display: none;">
+            <h2>Study Leave Application Details</h2>
+            <!-- Application details content will be dynamically populated -->
+        </div>
+
+        <div id="approval-process" class="tab-content" style="display: none;">
+            <h2>Approval Process</h2>
+            <div class="workflow-container">
+                <ul id="stepsList" class="steps-list">
+                    <li>
+                        <div class="step-header">Step 1: Department Approval</div>
+                        <div class="step-content">
+                            <p>Approval by Department Head</p>
+                            <button class="approve-step-button" data-step-name="Step 1">Approve Step 1</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">Step 2: Faculty Approval</div>
+                        <div class="step-content">
+                            <p>Approval by Faculty Dean</p>
+                            <button class="approve-step-button" data-step-name="Step 2">Approve Step 2</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">Step 3: Final Approval</div>
+                        <div class="step-content">
+                            <p>Final Approval by Administration</p>
+                            <button class="approve-step-button" data-step-name="Step 3">Approve Step 3</button>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="email-notification">
+                    <button id="sendEmailButton" class="email-btn">Send Email Notification</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

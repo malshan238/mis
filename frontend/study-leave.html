@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="study-leave.css">
+</head>
+<body>
+    <header class="page-header">
+        <img class="logo" src="../crest.png" alt="University Crest">
+        <div class="header-text">
+            <h1>Academic Establishment Division</h1>
+            <h3>University of Peradeniya</h3>
+        </div>
+        <img class="trailing" src="../profile_logo.png" alt="My Account" width="90" height="90">
+    </header>
+    <div class="body-new">
+        <h1 style="color: #000000;">Study Leave Extension</h1>
+        <div class="controls">
+            <div class="filter-section">
+                <label for="statusFilter">Filter by Status:</label>
+                <select id="statusFilter" onchange="fetchFilteredData()">
+                    <option value="select">Select Status</option>
+                    <option value="current-month-year">This Month</option>
+                    <option value="current-month-year-past">Last 3 Month</option>
+                </select>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="staffIdInput" placeholder="Enter Staff ID" aria-label="Enter Staff ID">
+                <button type="button" id="searchButton">Search</button>
+            </div>
+            <button type="button" onclick="window.location.href='study-leave-form.html'" class="new-entry">New Entry</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Leave ID</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Faculty</th>
+                        <th>Department</th>
+                        <th></th>
+                        <th>Status 1</th>
+                        <th>Status 2</th>
+                        <th>Status 3</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Move your script here -->s
+    <script src="study-leave.js"></script>
+</body>
+</html>
