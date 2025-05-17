@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User ID Verification</title>
+  <link rel="stylesheet" href="search-user.css">
+</head>
+<body>
+  <div class="top-bar">
+    <button onclick="window.location.href='study-leave.html'" class="back-button">← Back</button>
+  </div>
+
+  <div class="container">
+    <h2>Enter Your User ID</h2>
+    <form id="userSearchForm">
+      <input type="text" id="userIdInput" placeholder="Enter your user ID" required />
+      <button type="submit">Continue</button>
+    </form>
+    <p id="errorMsg" class="error"></p>
+  </div>
+
+  <script>
+    document.getElementById('userSearchForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      
+      const userId = document.getElementById('userIdInput').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const submitButton = document.querySelector('button[type="submit"]');
+      
+      // Clear previous error
+      errorMsg.textContent = "";
+      
+      // Show loading state
+      submitButton.textContent = "Verifying...";
+      submitButton.disabled = true;
+
+      fetch(`http://localhost:8080/api/staffMember/${userId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('User not found');
+          }
+          return response.json();
+        })
+        .then(data => {
+        const userId = data.staffId;
+        window.location.href = `Study-Leave-form.html?userId=${encodeURIComponent(userId)}`;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          errorMsg.textContent = "User ID not found. Please check and try again.";
+          
+          // Reset button state
+          submitButton.textContent = "Continue";
+          submitButton.disabled = false;
+        });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Request Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./study-leave-form.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div><button onclick="window.location.href='search -user.html'"  class="back-button">Back</button>
+            <h1>Leave Request Form</h1>
+            </div>
+            <form id="leaveRequestForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <p id="fullname"></p>                
+                </div>
+                
+                <div class="form-group">
+                    <label for="nameWithInitials">Name with Initials</label>
+                    <p id="nameWithInitials"></p>                
+
+                </div>
+                
+                <div class="form-group">
+                    <label for="staffId">Staff ID</label>
+                    <p id="staffId"></p>                
+
+                </div>
+                
+                <div class="date-range">
+                    <div class="form-group">
+                        <label for="startDate" class="required">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate" class="required">End Date</label>
+                        <input type="date" id="endDate" name="endDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="titleOfTraining">Title of Training/Event</label>
+                    <input type="text" id="titleOfTraining" name="titleOfTraining" placeholder="Enter the title of training or event">
+                </div>
+
+                <div class="form-group">
+                    <label for="donorAgency">Donor Agency</label>
+                    <input type="text" id="donorAgency" name="donorAgency" placeholder="Enter donor agency name">
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceOfFunds">Source of Funds</label>
+                    <input type="text" id="sourceOfFunds" name="sourceOfFunds" placeholder="Enter the source of funds">
+                </div>
+
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" name="projectName" placeholder="Enter the name of the project">
+                </div>
+
+                <div class="form-group">
+                    <label for="countryAndCity">Country and City of Training</label>
+                    <input type="text" id="countryAndCity" name="countryAndCity" placeholder="Enter country and city">
+                </div>
+
+                <div class="form-group">
+                    <label for="fieldOfStudy">Field of Study</label>
+                    <input type="text" id="fieldOfStudy" name="fieldOfStudy" placeholder="Enter field of study">
+                </div>
+
+                <div class="form-group">
+                    <label for="procedureDetails">Procedure Details</label>
+                    <textarea id="procedureDetails" name="procedureDetails" rows="4" placeholder="Enter any relevant procedure details"></textarea>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="study-leave.js"></script>
+</body>
+</html>

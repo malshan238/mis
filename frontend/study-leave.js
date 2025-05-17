@@ -513,3 +513,82 @@ document.getElementById("sendEmailButton").addEventListener("click", function ()
     }
 
 
+ 
+  // Optionally show userId on the form
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('leaveRequestForm');
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+
+
+    fetch(`http://localhost:8080/api/staffMember/${userId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('User not found');
+          }
+          return response.json();
+        })
+        .then(data => {
+        document.getElementById('fullname').value=data.name;
+        document.getElementById('staffId').value=data.staffId;
+
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Form validation
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const fullName = document.getElementById('fullname').value;
+        const staffId = document.getElementById('staffId').value;
+        
+        if (!fullName.trim()) {
+            alert('Please enter your full name');
+            return;
+        }
+        
+        if (!staffId.trim()) {
+            alert('Please enter your staff ID');
+            return;
+        }
+        
+        if (new Date(startDate) > new Date(endDate)) {
+            alert('End date must be after start date');
+            return;
+        }
+        
+        // Here you would typically send the form data to a server
+        alert('Form submitted successfully!');
+        // This is where you'd add AJAX call to submit the form
+        
+        // Example of collecting all form data
+        const formData = new FormData(form);
+        const formDataObj = {};
+        
+        formData.forEach((value, key) => {
+            formDataObj[key] = value;
+        });
+        
+        console.log('Form data:', formDataObj);
+    });
+    
+    // Set default dates (today and tomorrow)
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    
+    document.getElementById('startDate').value = formatDate(today);
+    document.getElementById('endDate').value = formatDate(tomorrow);
+});
